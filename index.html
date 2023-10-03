@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Kanban</title>
+</head>
+<body>
+    <div class="container">
+        <div class="addTask">
+            <input type="text">
+            <button>Add</button>
+        </div>
+        <div class="kanban">
+            <div draggable="true" class="toDo">
+                <div class="kanbanHeader">TO-DO</div>
+            </div>
+            <div draggable="true" class="inProgerss">
+                <div class="kanbanHeader">In Progress</div>
+            </div>
+            <div draggable="true" class="completed">
+                <div class="kanbanHeader">Completed</div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

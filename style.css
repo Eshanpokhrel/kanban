@@ -1,0 +1,80 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.container{
+    padding: 20px;
+    height: 100vh;
+    background-color: beige;
+    border: 2px solid red;
+}
+.addTask{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.addTask input{
+    padding: 10px;
+    font-size: 17px;
+    background: transparent;
+    outline: none;
+    border: 1px solid gray;
+    box-shadow: inset 0 0 4px black;
+    height: 20px;
+    width: 20%;
+    border-radius: 12px;
+}
+.addTask input:focus{
+    border-bottom: 3px solid red;
+    background-color: lightblue;
+    width: 45%;
+    transition: width 0.4s ease-in-out;
+}
+.addTask button{
+    height: 40px;
+    width: 55px;
+    border-radius: 8px;
+    border: none;
+    background-color: rgb(127, 255, 212);
+    font-size: 16px;
+}
+.addTask button:hover{
+    background-color: rgb(107, 208, 174);
+    box-shadow: 0 0 4px black;
+}
+.kanban{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 40px;
+    height: 500px;
+}
+.kanbanHeader{
+    display: grid;
+    place-items: center;
+    border-radius: 12px 12px 0 0;
+    background-color: aquamarine;
+    height:30px;
+    font-weight: 700;
+}
+.toDo{
+    border: 2px solid red;
+    border-radius: 12px;
+    height: 300px;
+    width: 30%;
+}
+.inProgerss{
+    border: 2px solid red;
+    border-radius: 12px;
+    height: 300px;
+    width: 30%;
+}
+.completed{
+    border: 2px solid red;
+    border-radius: 12px;
+    height: 300px;
+    width:30%;
+}
