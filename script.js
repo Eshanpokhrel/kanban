@@ -23,4 +23,12 @@ addBtn.addEventListener("click",(e)=>{
 
     todo.appendChild(newTask);
     input.value = "";    
+    saveData();
 });
+
+function saveData(){
+    localStorage.setItem("data",todo.innerText)
+}
+// function getData(){
+//     todo.innerText = localStorage.getItem("data");
+// }
