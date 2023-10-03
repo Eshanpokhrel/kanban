@@ -2,6 +2,9 @@
     margin: 0;
     padding: 0;
 }
+::-webkit-scrollbar{
+    display: none;
+}
 .container{
     padding: 20px;
     height: 100vh;
@@ -52,29 +55,40 @@
     gap: 40px;
     height: 500px;
 }
-.kanbanHeader{
+.heading{
     display: grid;
     place-items: center;
     border-radius: 12px 12px 0 0;
     background-color: aquamarine;
     height:30px;
+    width: 100%;
     font-weight: 700;
 }
-.toDo{
+.taskBox{
+    display: flex;
+    place-items: center;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f4f4f4;
+    box-shadow: 0 0px 8px black;
     border: 2px solid red;
     border-radius: 12px;
-    height: 300px;
+    min-height: 200px;
     width: 30%;
+    flex-shrink: 0;
 }
-.inProgerss{
-    border: 2px solid red;
-    border-radius: 12px;
-    height: 300px;
-    width: 30%;
+.task{
+    background-color: white;
+    color: black;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    padding: 12px;
+    border-radius: 8px;
+    width: 80%;
+    cursor: grab;
 }
-.completed{
-    border: 2px solid red;
-    border-radius: 12px;
-    height: 300px;
-    width:30%;
+.isDragging{
+    scale: 1.05;
+    box-shadow: 0 0 8px rgba(0,0,0,0.25);
+    background-color: black;
+    color: white;
 }
