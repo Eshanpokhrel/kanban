@@ -11,13 +11,13 @@
     background-color: beige;
     border: 2px solid red;
 }
-.addTask{
+#addTask{
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
 }
-.addTask input{
+#addTask input{
     padding: 10px;
     font-size: 17px;
     background: transparent;
@@ -25,16 +25,16 @@
     border: 1px solid gray;
     box-shadow: inset 0 0 4px black;
     height: 20px;
-    width: 20%;
+    width: 40%;
     border-radius: 12px;
 }
-.addTask input:focus{
+/* #addTask input:focus{
     border-bottom: 3px solid red;
     background-color: lightblue;
     width: 45%;
     transition: width 0.4s ease-in-out;
-}
-.addTask button{
+} */
+#addTask button{
     height: 40px;
     width: 55px;
     border-radius: 8px;
@@ -42,7 +42,7 @@
     background-color: rgb(127, 255, 212);
     font-size: 16px;
 }
-.addTask button:hover{
+#addTask button:hover{
     background-color: rgb(107, 208, 174);
     box-shadow: 0 0 4px black;
 }
@@ -59,12 +59,12 @@
     display: grid;
     place-items: center;
     border-radius: 12px 12px 0 0;
-    background-color: aquamarine;
     height:30px;
     width: 100%;
     font-weight: 700;
 }
 .taskBox{
+    padding: 12px;
     display: flex;
     place-items: center;
     flex-direction: column;
