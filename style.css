@@ -1,14 +1,23 @@
 *{
     margin: 0;
     padding: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+body{
+    height: 100vh;
+    padding: 20px;
+    background: linear-gradient(to right bottom, red,white,orange);
 }
 ::-webkit-scrollbar{
     display: none;
 }
 .container{
+    margin: auto;
     padding: 20px;
-    height: 100vh;
-    background-color: beige;
+    height: 90vh;
+    width: 80%;
+    border-radius: 28px;
+    background-color: rgb(156, 174, 198);
     /* border: 2px solid red; */
 }
 #addTask{
@@ -39,16 +48,18 @@
     width: 55px;
     border-radius: 8px;
     border: none;
-    background-color: rgb(127, 255, 212);
+    background-color: rgb(112, 143, 165);
     font-size: 16px;
+    cursor: pointer;
 }
 #addTask button:hover{
-    background-color: rgb(107, 208, 174);
-    box-shadow: 0 0 4px black;
+    background-color: rgb(70, 102, 146);
+    /* box-shadow: 0 0 4px black; */
 }
 .kanban{
+    margin: auto;
     display: flex;
-    width: 100%;
+    width: 85%;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -61,7 +72,8 @@
     border-radius: 12px 12px 0 0;
     height:30px;
     width: 100%;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 800;
 }
 .taskBox{
     padding: 12px;
@@ -69,7 +81,7 @@
     place-items: center;
     flex-direction: column;
     gap: 10px;
-    background-color: #f4f4f4;
+    background-color: rgb(132, 145, 163);
     box-shadow: 0 0px 8px black;
     /* border: 2px solid red; */
     border-radius: 12px;
@@ -78,12 +90,14 @@
     flex-shrink: 0;
 }
 .task{
-    background-color: white;
+    background-color: rgb(70, 102, 146);
     color: black;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     padding: 12px;
     border-radius: 8px;
     width: 80%;
+    font-size: 20px;
+    font-weight: 400;
     cursor: grab;
 }
 .isDragging{
