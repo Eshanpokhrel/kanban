@@ -2,7 +2,6 @@ const addTask = document.getElementById("addTask");
 const input = document.getElementById("todoInput");
 const todo = document.getElementById("toDo");
 const addBtn = document.getElementById("add");
-var newTask
 
 addBtn.addEventListener("click",(e)=>{
     e.preventDefault();
@@ -10,7 +9,7 @@ addBtn.addEventListener("click",(e)=>{
 
     if (!value) return;
 
-    newTask = document.createElement("p");
+    const newTask = document.createElement("p");
     newTask.classList.add("task")
     newTask.setAttribute("draggable","true")
     newTask.innerText = value;
