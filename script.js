@@ -2,6 +2,7 @@ const addTask = document.getElementById("addTask");
 const input = document.getElementById("todoInput");
 const todo = document.getElementById("toDo");
 const addBtn = document.getElementById("add");
+let newTask
 
 addBtn.addEventListener("click",(e)=>{
     e.preventDefault();
@@ -9,7 +10,7 @@ addBtn.addEventListener("click",(e)=>{
 
     if (!value) return;
 
-    const newTask = document.createElement("p");
+    newTask = document.createElement("p");
     newTask.classList.add("task")
     newTask.setAttribute("draggable","true")
     newTask.innerText = value;
@@ -23,14 +24,14 @@ addBtn.addEventListener("click",(e)=>{
 
     todo.appendChild(newTask);
     input.value = "";    
-    // saveData();
+    saveData();
 
 });
 
-// function saveData(){
-//     localStorage.setItem("data",todo.innerText);
-// }
-// function getData(){
-//     newTask.innerText = localStorage.getItem("data");
-// }
-// getData()
+function saveData(){
+    localStorage.setItem("data",newTask.innerText);
+}
+function getData(){
+    newTask.innerText = localStorage.getItem("data");
+}
+getData();
