@@ -105,4 +105,12 @@ body{
     box-shadow: 0 0 8px rgba(0,0,0,0.25);
     background-color: black;
     color: white;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
 }
+/* .isDragging:active{
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+} */
