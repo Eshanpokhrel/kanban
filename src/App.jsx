@@ -7,15 +7,19 @@ export default function App() {
   const { columns, columnOrder, addTask, deleteTask, moveTask } = useKanban();
 
   return (
-    <div className="app">
-      <header className="app-header" id="app-header">
-        <div className="logo">
-          <LayoutDashboard size={22} />
-          <h1>Kanban</h1>
+    <div className="relative z-10 max-w-[1200px] mx-auto pt-10 px-6 pb-16">
+      <header className="text-center mb-8" id="app-header">
+        <div className="inline-flex items-center gap-2.5 text-primary">
+          <LayoutDashboard size={22} className="text-accent-blue" />
+          <h1 className="text-[1.75rem] font-extrabold tracking-[-0.03em] bg-gradient-to-br from-primary to-secondary clip-text-gradient">
+            Kanban
+          </h1>
         </div>
-        <p className="subtitle">Organize your work, one task at a time</p>
+        <p className="text-muted text-sm mt-1 font-normal">Organize your work, one task at a time</p>
       </header>
+
       <AddTaskInput onAdd={addTask} />
+
       <Board
         columns={columns}
         columnOrder={columnOrder}

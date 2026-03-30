@@ -11,9 +11,18 @@ import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useState } from 'react';
 import Column from './Column';
 
+/**
+ * Board component — wraps all columns in a DndContext to enable drag-and-drop.
+ * Handles three drag lifecycle events:
+ *   1. dragStart — saves the active task for the drag overlay preview
+ *   2. dragOver  — handles cross-column moves (fires continuously while dragging)
+ *   3. dragEnd   — handles within-column reordering (fires once on drop)
+ */
 export default function Board({ columns, columnOrder, onDelete, onMove }) {
-  const [activeTask, setActiveTask] = useState(null);
+  const [activeTask, setActiveTask] = useState(null); // Currently dragged task (for overlay)
 
+  // PointerSensor: requires 5px drag distance to start (prevents accidental drags on click)
+  // KeyboardSensor: allows drag via keyboard (Space to grab, arrows to move)
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, {
@@ -21,6 +30,7 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
     })
   );
 
+  // Look up which column a task belongs to by checking each column's task list
   function findColumnOfTask(taskId) {
     for (const colId of columnOrder) {
       if (columns[colId].tasks.some((t) => t.id === taskId)) {
@@ -30,6 +40,7 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
     return null;
   }
 
+  // When drag begins: store the active task so DragOverlay can render a preview
   function handleDragStart(event) {
     const { active } = event;
     const colId = findColumnOfTask(active.id);
@@ -39,6 +50,8 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
     }
   }
 
+  // Fires continuously while dragging — used for CROSS-COLUMN moves
+  // Moves the task to the target column immediately for instant visual feedback
   function handleDragOver(event) {
     const { active, over } = event;
     if (!over) return;
@@ -46,20 +59,17 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
     const activeColId = findColumnOfTask(active.id);
     if (!activeColId) return;
 
-    // Determine the target column
+    // Determine target column — could be dropping on a column or on a task within it
     let overColId = null;
-
-    // Check if dropping over a column directly
     if (columnOrder.includes(over.id)) {
-      overColId = over.id;
+      overColId = over.id; // Dropping directly on a column
     } else {
-      // Dropping over a task — find which column it belongs to
-      overColId = findColumnOfTask(over.id);
+      overColId = findColumnOfTask(over.id); // Dropping on a task — find its column
     }
 
+    // Only move if the task is entering a different column
     if (!overColId || activeColId === overColId) return;
 
-    // Move to the end of the target column when dragging over it
     const overColumn = columns[overColId];
     const overIndex = overColumn.tasks.findIndex((t) => t.id === over.id);
     const newIndex = overIndex >= 0 ? overIndex : overColumn.tasks.length;
@@ -67,9 +77,10 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
     onMove(active.id, activeColId, overColId, newIndex);
   }
 
+  // Fires once when drag ends — used for WITHIN-COLUMN reordering
   function handleDragEnd(event) {
     const { active, over } = event;
-    setActiveTask(null);
+    setActiveTask(null); // Clear the overlay
 
     if (!over) return;
 
@@ -85,8 +96,8 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
 
     if (!overColId) return;
 
+    // Reorder within the same column if positions differ
     if (activeColId === overColId) {
-      // Reorder within same column
       const col = columns[overColId];
       const activeIdx = col.tasks.findIndex((t) => t.id === active.id);
       const overIdx = col.tasks.findIndex((t) => t.id === over.id);
@@ -104,7 +115,7 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="board" id="kanban-board">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5" id="kanban-board">
         {columnOrder.map((colId) => (
           <Column
             key={colId}
@@ -113,10 +124,11 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
           />
         ))}
       </div>
+
       <DragOverlay>
         {activeTask ? (
-          <div className="task-card drag-overlay">
-            <p className="task-text">{activeTask.text}</p>
+          <div className="flex items-start gap-2 p-3 bg-elevated border border-accent-blue rounded-sm shadow-lg shadow-[0_0_20px_rgba(91,141,239,0.15)] opacity-95">
+            <p className="text-[0.85rem] font-medium text-primary leading-snug break-words">{activeTask.text}</p>
           </div>
         ) : null}
       </DragOverlay>
