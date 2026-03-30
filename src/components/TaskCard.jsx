@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Trash2, GripVertical } from 'lucide-react';
+import { Trash2, GripVertical, Pencil, Check, X } from 'lucide-react';
 
 // Converts a timestamp to a human-readable relative time string
 function timeAgo(timestamp) {
@@ -20,7 +21,32 @@ function timeAgo(timestamp) {
  * - Drag listeners are attached only to the grip handle (not the whole card)
  * - Delete button is hidden by default and revealed on hover (via CSS)
  */
-export default function TaskCard({ task, onDelete, columnId }) {
+export default function TaskCard({ task, onDelete, onEdit, columnId }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(task.text);
+  const [editPriority, setEditPriority] = useState(task.priority);
+
+  const handleSave = () => {
+    if (editText.trim()) {
+      onEdit(task.id, editText.trim(), editPriority);
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditText(task.text);
+    setEditPriority(task.priority);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    } else if (e.key === 'Escape') {
+      handleCancel();
+    }
+  };
+
   const {
     attributes,  // ARIA attributes for accessibility
     listeners,   // Drag event handlers (pointer/keyboard)
@@ -66,23 +92,81 @@ export default function TaskCard({ task, onDelete, columnId }) {
         <GripVertical size={14} />
       </button>
 
-      <div className="flex-1 min-w-0">
-        <p className="text-[0.85rem] font-medium text-primary leading-snug break-words">{task.text}</p>
-        <div className="flex items-center gap-2 mt-1.5">
-          {task.priority && <span className="text-[0.65rem] font-bold uppercase tracking-[0.05em] text-accent-amber bg-accent-amber/15 px-1.5 py-0.5 rounded">High Priority</span>}
-          <span className="text-[0.7rem] text-muted">{timeAgo(task.createdAt)}</span>
+      {isEditing ? (
+        <div className="flex-1 min-w-0 flex flex-col gap-2 relative z-10 w-full py-1">
+          <input
+            type="text"
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            autoFocus
+            className="w-full py-1.5 px-2 text-[0.85rem] text-primary bg-elevated border border-border-hover rounded outline-none focus:border-accent-blue focus:ring-[2px] focus:ring-accent-blue/20"
+          />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-[0.65rem] font-semibold text-muted uppercase">Priority</span>
+              <button
+                type="button"
+                onClick={() => setEditPriority(!editPriority)}
+                className={`relative inline-flex items-center h-4 w-8 rounded-full transition-all duration-200 focus:outline-none flex-shrink-0 ${
+                  editPriority 
+                    ? 'bg-green-500 shadow-[0_0_10px_orange] border border-accent-amber/50' 
+                    : 'bg-surface border border-border-subtle hover:bg-elevated'
+                }`}
+                aria-pressed={editPriority}
+                role="switch"
+                aria-label="Toggle Priority"
+              >
+                <span aria-hidden="true" className={`pointer-events-none absolute left-[2px] top-[1px] inline-block h-3 w-3 transform rounded-full bg-white transition duration-200 ease-in-out ${editPriority ? 'translate-x-[14px]' : 'translate-x-0'}`}></span>
+              </button>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleSave}
+                className="p-1 text-green-500 hover:bg-green-500/10 rounded transition-colors duration-150"
+                aria-label="Save changes"
+              >
+                <Check size={14} />
+              </button>
+              <button
+                onClick={handleCancel}
+                className="p-1 text-red-500 hover:bg-red-500/10 rounded transition-colors duration-150"
+                aria-label="Cancel edit"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="flex-1 min-w-0">
+            <p className="text-[0.85rem] font-medium text-primary leading-snug break-words">{task.text}</p>
+            <div className="flex items-center gap-2 mt-1.5">
+              {task.priority && <span className="text-[0.65rem] font-bold uppercase tracking-[0.05em] text-accent-amber bg-accent-amber/15 px-1.5 py-0.5 rounded">High Priority</span>}
+              <span className="text-[0.7rem] text-muted">{timeAgo(task.createdAt)}</span>
+            </div>
+          </div>
 
-      {/* Delete button (revealed on card hover) */}
-      <button
-        className="flex items-center justify-center p-1.5 text-muted bg-transparent border-none rounded-md cursor-pointer flex-shrink-0 opacity-0 scale-90 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 hover:!text-red-500 hover:!bg-red-500/10"
-        onClick={() => onDelete(task.id)}
-        aria-label={`Delete task: ${task.text}`}
-        id={`delete-${task.id}`}
-      >
-        <Trash2 size={14} />
-      </button>
+          <button
+            className="flex items-center justify-center p-1.5 text-muted bg-transparent border-none rounded-md cursor-pointer flex-shrink-0 transition-all duration-300 hover:!text-white hover:!bg-white/10 opacity-100 scale-100 md:opacity-0 md:scale-90 md:group-hover:opacity-100 md:group-hover:scale-100"
+            onClick={() => setIsEditing(true)}
+            aria-label={`Edit task: ${task.text}`}
+            id={`edit-${task.id}`}
+          >
+            <Pencil size={14} />
+          </button>
+          {/* Delete button (revealed on card hover) */}
+          <button
+            className="flex items-center justify-center p-1.5 text-muted bg-transparent border-none rounded-md cursor-pointer flex-shrink-0 transition-all duration-300 hover:!text-red-500 hover:!bg-red-500/10 opacity-100 scale-100 md:opacity-0 md:scale-90 md:group-hover:opacity-100 md:group-hover:scale-100"
+            onClick={() => onDelete(task.id)}
+            aria-label={`Delete task: ${task.text}`}
+            id={`delete-${task.id}`}
+          >
+            <Trash2 size={14} />
+          </button>
+        </>
+      )}
     </div>
   );
 }

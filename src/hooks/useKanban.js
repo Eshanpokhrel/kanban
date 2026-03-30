@@ -113,6 +113,22 @@ export function useKanban() {
     });
   }, []);
 
+  // Edit a task by ID
+  const editTask = useCallback((taskId, newText, newPriority) => {
+    setColumns((prev) => {
+      const next = {};
+      for (const key of columnOrder) {
+        next[key] = {
+          ...prev[key],
+          tasks: prev[key].tasks.map((t) =>
+            t.id === taskId ? { ...t, text: newText, priority: newPriority } : t
+          ),
+        };
+      }
+      return next;
+    });
+  }, []);
+
   // Move a task: either reorder within a column, or transfer between columns
   const moveTask = useCallback((taskId, fromColumnId, toColumnId, newIndex) => {
     setColumns((prev) => {
@@ -150,5 +166,5 @@ export function useKanban() {
     });
   }, []);
 
-  return { columns, columnOrder, addTask, deleteTask, moveTask };
+  return { columns, columnOrder, editTask, addTask, deleteTask, moveTask };
 }

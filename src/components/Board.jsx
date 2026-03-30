@@ -18,7 +18,7 @@ import Column from './Column';
  *   2. dragOver  — handles cross-column moves (fires continuously while dragging)
  *   3. dragEnd   — handles within-column reordering (fires once on drop)
  */
-export default function Board({ columns, columnOrder, onDelete, onMove }) {
+export default function Board({ columns, columnOrder, onEdit, onDelete, onMove }) {
   const [activeTask, setActiveTask] = useState(null); // Currently dragged task (for overlay)
 
   // PointerSensor: requires 5px drag distance to start (prevents accidental drags on click)
@@ -120,6 +120,7 @@ export default function Board({ columns, columnOrder, onDelete, onMove }) {
           <Column
             key={colId}
             column={columns[colId]}
+            onEdit={onEdit}
             onDelete={onDelete}
           />
         ))}

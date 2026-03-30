@@ -4,7 +4,7 @@ import Board from './components/Board';
 import { LayoutDashboard } from 'lucide-react';
 
 export default function App() {
-  const { columns, columnOrder, addTask, deleteTask, moveTask } = useKanban();
+  const { columns, columnOrder, addTask, editTask, deleteTask, moveTask } = useKanban();
 
   return (
     <div className="relative z-10 max-w-[1200px] mx-auto pt-10 px-6 pb-16">
@@ -23,6 +23,7 @@ export default function App() {
       <Board
         columns={columns}
         columnOrder={columnOrder}
+        onEdit={editTask}
         onDelete={deleteTask}
         onMove={moveTask}
       />

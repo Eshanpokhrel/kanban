@@ -19,7 +19,7 @@ const columnMeta = {
  * - SortableContext enables reordering tasks within this column
  * - Shows an empty state placeholder when no tasks exist
  */
-export default function Column({ column, onDelete }) {
+export default function Column({ column, onEdit, onDelete }) {
   // isOver is true when a dragged card is hovering above this column
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
   const meta = columnMeta[column.id] || columnMeta.todo;
@@ -53,6 +53,7 @@ export default function Column({ column, onDelete }) {
             <TaskCard
               key={task.id}
               task={task}
+              onEdit={onEdit}
               onDelete={onDelete}
               columnId={column.id}
             />
