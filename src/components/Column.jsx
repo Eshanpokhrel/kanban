@@ -28,7 +28,7 @@ export default function Column({ column, onEdit, onDelete }) {
   return (
     <div
       ref={setNodeRef}
-      className={`glass-effect bg-glass-bg border rounded-2xl flex flex-col min-h-[200px] md:min-h-[400px] transition-all duration-250 ease-out ${isOver ? 'border-border-hover shadow-md' : 'border-border-subtle'}`}
+      className={`glass-effect bg-glass-bg border rounded-2xl flex flex-col h-full min-h-[200px] md:min-h-[400px] transition-all duration-250 ease-out ${isOver ? 'border-border-hover shadow-md' : 'border-border-subtle'}`}
       id={`column-${column.id}`}
     >
       <div className="flex items-center justify-between py-4 px-4 border-b border-border-subtle">

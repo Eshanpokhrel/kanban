@@ -3,12 +3,14 @@ import {
   DragOverlay,
   PointerSensor,
   KeyboardSensor,
-  closestCorners,
+  closestCenter,
+  rectIntersection,
+  pointerWithin,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Column from './Column';
 
 /**
@@ -28,6 +30,38 @@ export default function Board({ columns, columnOrder, onEdit, onDelete, onMove }
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
+  );
+
+  // Custom collision detection strategy
+  // Resolves issues where dragging into empty lists fails or sorting breaks
+  const customCollisionDetection = useCallback(
+    (args) => {
+      // 1. Find droppables under the pointer (or intersection if pointer fails)
+      const pointerCollisions = pointerWithin(args);
+      
+      const intersections = pointerCollisions.length > 0 
+        ? pointerCollisions 
+        : rectIntersection(args);
+      
+      if (intersections.length > 0) {
+        // Extract collisions that are tasks (not columns)
+        const taskCollisions = intersections.filter(
+          (c) => !columnOrder.includes(c.id)
+        );
+        
+        // If we're hovering over a task, prefer it (for sorting)
+        if (taskCollisions.length > 0) {
+          return taskCollisions;
+        }
+        
+        // Otherwise, we are hovering over an empty column
+        return intersections;
+      }
+      
+      // 2. Fallback for keyboard drags or edge cases
+      return closestCenter(args);
+    },
+    [columnOrder]
   );
 
   // Look up which column a task belongs to by checking each column's task list
@@ -100,7 +134,13 @@ export default function Board({ columns, columnOrder, onEdit, onDelete, onMove }
     if (activeColId === overColId) {
       const col = columns[overColId];
       const activeIdx = col.tasks.findIndex((t) => t.id === active.id);
-      const overIdx = col.tasks.findIndex((t) => t.id === over.id);
+      
+      let overIdx = col.tasks.findIndex((t) => t.id === over.id);
+      // If dropping directly on the column (empty space below tasks), move to the end
+      if (columnOrder.includes(over.id)) {
+        overIdx = col.tasks.length - 1;
+      }
+
       if (activeIdx !== -1 && overIdx !== -1 && activeIdx !== overIdx) {
         onMove(active.id, activeColId, overColId, overIdx);
       }
@@ -110,7 +150,7 @@ export default function Board({ columns, columnOrder, onEdit, onDelete, onMove }
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={customCollisionDetection}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
